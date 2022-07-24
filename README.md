@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # To Do List App React (V1)
+=======
+# Task Tracker
+>>>>>>> af20f49c79df268c60d66c48a4d18e0737e992ce
 
 To Do List App React JS by WebStylePress (Add, Edit, Update, Delete, Toggle Tasks)
 
