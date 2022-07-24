@@ -1,12 +1,15 @@
-const UpdateForm = ({ updateData, changeTask, updateTask, cancelUpdate }) => {
+
+
+const UpdateForm = ({ updateData, changeTask, updateTask, cancelUpdate, edittedTask }) => {
   return(
     <>
       {/* Update Task */}
       <div className="row">
         <div className="col">
           <input 
-            value={ updateData && updateData.title }
-            onChange={ (e) => changeTask(e)}
+            value={ edittedTask }
+            onChange={ changeTask }
+            placeholder={updateData?.title}
             className="form-control form-control-lg"
           />
         </div>
