@@ -1,16 +1,30 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import AddTaskForm from './components/AddTaskForm.jsx';
 import UpdateForm from './components/UpdateForm.jsx';
 import ToDo from './components/ToDo.jsx';
-
+import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
 
 function App() {
 
+  const URL = "http://localhost:8000"
+
   // Tasks (ToDo List) State
   const [toDo, setToDo] = useState([]);
+  const [tasks, setTasks] = useState([]);
+
+  const getTasks = async () => {
+    const { data } = await axios.get(`${URL}/api/todo`)
+    console.log(data)
+    setTasks(data)
+  }
+
+  useEffect(() => {
+    getTasks()
+  }, [tasks])
+  
 
   // Temp State
   const [newTask, setNewTask] = useState('');
@@ -99,7 +113,7 @@ function App() {
     {toDo && toDo.length ? '' : 'No Tasks...'}
 
     <ToDo
-      toDo={toDo}
+      toDo={tasks}
       markDone={markDone}
       setUpdateData={setUpdateData}
       deleteTask={deleteTask}

@@ -12,11 +12,11 @@ const ToDo = ({ toDo, markDone, setUpdateData, deleteTask }) => {
       .sort((a, b) => a.id > b.id ? 1 : -1)
       .map( (task, index) => {
         return(
-          <React.Fragment key={task.id}>
+          <React.Fragment key={task._id}>
             <div className="col taskBg">
-              <div className={ task.status ? 'done' : '' }>
+              <div className={ task.completed ? 'done' : '' }>
                 <span className="taskNumber">{index + 1}</span>
-                <span className="taskText">{task.title}</span>
+                <span className="taskText">{task.todo}</span>
               </div>
               <div className="iconsWrap">
                 <span title="Completed / Not Completed"
