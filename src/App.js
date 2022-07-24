@@ -14,50 +14,49 @@ function App() {
   // Tasks (ToDo List) State
   const [toDo, setToDo] = useState([]);
   const [tasks, setTasks] = useState([]);
+  // Temp State
+  const [newTask, setNewTask] = useState('');
+  const [edittedTask, setEdittedTask] = useState('');
+  const [updateData, setUpdateData] = useState('');
 
   const getTasks = async () => {
     const { data } = await axios.get(`${URL}/api/todo`)
-    console.log(data)
     setTasks(data)
   }
 
   useEffect(() => {
     getTasks()
+    return
   }, [tasks])
+
+  
   
 
-  // Temp State
-  const [newTask, setNewTask] = useState('');
-  const [updateData, setUpdateData] = useState('');
 
-  // Add task 
-  ///////////////////////////
-  const addTask = () => {
-    if(newTask) {
-      let num = toDo.length + 1; 
-      let newEntry = { id: num, title: newTask, status: false }
-      setToDo([...toDo, newEntry])
-      setNewTask('');
-    }
-  }
+  // // Add task 
+  // ///////////////////////////
+  // const addTask = () => {
+
+  //   if(newTask) {
+  //     let num = toDo.length + 1; 
+  //     let newEntry = { id: num, title: newTask, status: false }
+  //     setToDo([...toDo, newEntry])
+  //     setNewTask('');
+  //   }
+  // }
 
   // Delete task 
   ///////////////////////////
-  const deleteTask = (id) => {
-    let newTasks = toDo.filter( task => task.id !== id)
-    setToDo(newTasks);
+  const deleteTask = async (id) => {
+    await axios.delete(`${URL}/api/todo/${id}`)
   }
 
   // Mark task as done or completed
   ///////////////////////////
-  const markDone = (id) => {
-    let newTask = toDo.map( task => {
-      if( task.id === id ) {
-        return ({ ...task, status: !task.status })
-      }
-      return task;
+  const markDone = async (task) => {
+    await axios.put(`${URL}/api/todo/${task?._id}`,{
+      completed: !task?.completed
     })
-    setToDo(newTask);
   }
 
   // Cancel update
@@ -66,51 +65,42 @@ function App() {
     setUpdateData('');
   }
 
-  // Change task for update
-  ///////////////////////////
-  const changeTask = (e) => {
-    let newEntry = {
-      id: updateData.id,
-      title: e.target.value,
-      status: updateData.status ? true : false
-    }
-    setUpdateData(newEntry);
-  }
 
   // Update task
   ///////////////////////////
-  const updateTask = () => {
-    let filterRecords = [...toDo].filter( task => task.id !== updateData.id );
-    let updatedObject = [...filterRecords, updateData]
-    setToDo(updatedObject);
-    setUpdateData('');
+  const updateTask = async () => {
+    await axios.put(`${URL}/api/todo/${updateData?.id}`,{
+      todo: edittedTask,
+      completed: updateData.completed ? true : false
+    })
+    setEdittedTask("")
+    setUpdateData(null)
   }
+
+
 
   return (
     <div className="container App">
 
     <br /><br />
-    <h2>To Do List App (ReactJS)</h2>
+    <h2>Task Tracker</h2>
     <br /><br />
 
-    {updateData && updateData ? (
+    { updateData ? (
       <UpdateForm 
+      edittedTask={edittedTask}
         updateData={updateData}
-        changeTask={changeTask}
+        changeTask={(e) => setEdittedTask(e.target.value)}
         updateTask={updateTask}
         cancelUpdate={cancelUpdate}
       />
     ) : (
-      <AddTaskForm 
-        newTask={newTask}
-        setNewTask={setNewTask}
-        addTask={addTask}
-      />
+      <AddTaskForm />
     )}
 
     {/* Display ToDos */}
 
-    {toDo && toDo.length ? '' : 'No Tasks...'}
+    {tasks && tasks.length ? '' : 'No Tasks...'}
 
     <ToDo
       toDo={tasks}

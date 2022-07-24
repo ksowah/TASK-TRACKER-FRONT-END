@@ -1,12 +1,28 @@
-const AddTaskForm = ({ newTask, setNewTask, addTask }) => {
+import axios from "axios";
+import { useState } from "react";
+
+
+
+const AddTaskForm = () => {
+
+  const URL = "http://localhost:8000"
+  const [task, setTask] = useState("")
+
+  const addTask = async () => {
+    await axios.post(`${URL}/api/todo`,{
+      todo: task
+    })
+    setTask("")
+  }
+
   return(
     <>
       {/* Add Task */}
       <div className="row">
         <div className="col">
           <input 
-            value={newTask}
-            onChange={ (e) => setNewTask(e.target.value)}
+            value={task}
+            onChange={ (e) => setTask(e.target.value)}
             className="form-control form-control-lg"
           />
         </div>
